@@ -15,12 +15,19 @@ function generateItemElement(item, itemIndex, template) {
   return `
     <li class="js-item-index-element  ${item.hidden ? "hidden" : ''}" data-item-index="${itemIndex}" >
       <span class="shopping-item js-shopping-item ${item.checked ? "shopping-item__checked" : ''} ">${item.name}</span>
+      <form class="js-edit-item hidden">
+      <input type="text" name="edit-item" id="js-edit-item-text" placeholder="${item.name}" autofocus>
+      <button type="submit" class="js-change-item">Change item</button>
+      </form>
       <div class="shopping-item-controls">
         <button class="shopping-item-toggle js-item-toggle">
             <span class="button-label">check</span>
         </button>
         <button class="shopping-item-delete js-item-delete">
             <span class="button-label">delete</span>
+        </button>
+        <button class="edit-button js-edit-button">
+            <span class="button-label">edit</span>
         </button>
       </div>
     </li>`;
@@ -147,8 +154,34 @@ function displaySearched() {
   });
 }
 
+function editButtonClick() {
+  $('.js-shopping-list').on('click', `.js-edit-button`, function(event) {
+    console.log('editbutton was clicked')
+    const itemIndex = getItemIndexFromElement(event.currentTarget);
+    $(event.currentTarget).closest('li').find('.js-shopping-item').toggleClass('hidden');
+    $(event.currentTarget).closest('li').find('.js-edit-item').toggleClass('hidden')
+    $(event.currentTarget).closest('li').find('#js-edit-item-text').val(STORE[itemIndex].name)
+})
+}
+
+function changeItemButtonClick() {
+  $('.js-shopping-list').on('click', `.js-change-item`, function(event) {
+    event.preventDefault();
+    console.log('changeItemButton was clicked')
+    const itemIndex = getItemIndexFromElement(event.currentTarget);
+    const newText = $(event.currentTarget).closest('li').find('#js-edit-item-text').val();
+    STORE[itemIndex].name = newText;
+    renderShoppingList();
+  });
+};
+
+
 function editTitle() {
   //when user selects name of an item on the list, they can change it
+  editButtonClick()
+  //on item name click: item name is hidden + input field and edit button are visible
+  changeItemButtonClick()
+  
 }
 
 // this function will be our callback when the page loads. it's responsible for
@@ -172,6 +205,10 @@ $(handleShoppingList);
 
 
 
-
 //const lastdisplayed = $(".js-select").val()
-//$(".js-select").val(lastdisplayed)
+//$(".js-select").val(lastdisplayed)`
+
+// $('.js-shopping-list').on('click', `span`, function(event) {
+//   const itemIndex = getItemIndexFromElement(event.currentTarget);
+//   $(event.currentTarget).addClass('hidden');
+//   $(this).closest('li').find('.js-edit-item').removeClass('hidden');

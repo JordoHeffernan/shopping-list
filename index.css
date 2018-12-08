@@ -57,3 +57,12 @@
   form {
     margin: 10px;
   }
+
+  a:hover {
+    font-style: italic;
+    cursor: hand;
+  }
+
+  .js-edit-button {
+    display: inline-block;
+  }
